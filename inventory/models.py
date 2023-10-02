@@ -51,11 +51,11 @@ class Item(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(blank=True, null=True, max_length=150)
     slug = models.SlugField(max_length=500, unique=True, blank=True, null=True)
-    type = models.CharField(max_length=1, choices=ITEM_TYPES, blank=True, null=True, default="N")
+    type = models.CharField(max_length=1, choices=ITEM_TYPES, blank=True, null=True, default="P")
     price = models.IntegerField(blank=True, null=True)
     created_at = jmodels.jDateTimeField(blank=True, null=True)
     updated_at = jmodels.jDateTimeField(blank=True, null=True)    
-    is_deleted = models.CharField(max_length=1, choices=DELETED_CHOICES, blank=True, null=True, default="P")
+    is_deleted = models.CharField(max_length=1, choices=DELETED_CHOICES, blank=True, null=True, default="N")
 
     def __str__(self):
         return f"{self.name} / ({self.price:,d})"
