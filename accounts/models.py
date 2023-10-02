@@ -9,4 +9,7 @@ class CustomUser(AbstractUser):
         ('F', 'Firm')
     )
 
-    type = models.CharField(max_length=1, choices=USER_TYPES, blank=True, null=True, default="C")   
+    type = models.CharField(max_length=1, choices=USER_TYPES, blank=True, null=True, default="C")  
+    
+    def __str__(self):
+        return self.username
