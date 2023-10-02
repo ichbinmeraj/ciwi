@@ -108,4 +108,3 @@ class Category(models.Model):
         self.updated_at = timezone.localtime(timezone.now())
 
         super(Category, self).save(*args, **kwargs)
-    
