@@ -1,0 +1,14 @@
+@font-face {
+    font-family: 'yekan';
+    src: url('../fonts/Yekan.ttf') format("truetype");
+}
+
+body {
+    font-family: 'yekan';
+}
+
+@media print {
+    #printPageButton {
+      display: none;
+    }
+  }
