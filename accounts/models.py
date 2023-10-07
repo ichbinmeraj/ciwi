@@ -4,9 +4,9 @@ from django.db import models
 class CustomUser(AbstractUser):
 
     USER_TYPES = (
-        ('C', 'Customer'),
-        ('M', 'Mechanic'),
-        ('F', 'Firm')
+        ('C', 'مشتری'),
+        ('M', 'مکانیک'),
+        ('F', 'شرکت')
     )
 
     type = models.CharField(max_length=1, choices=USER_TYPES, blank=True, null=True, default="C")  

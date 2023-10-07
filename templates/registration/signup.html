@@ -1,13 +1,19 @@
 <!-- templates/registration/signup.html -->
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
-{% block title %}Sign Up{% endblock %}
+{% block title %}صفحه ثبت نام{% endblock %}
 
 {% block content %}
-<h2>Sign Up</h2>
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Sign Up</button>
-</form>
+<div class='container'>
+  <h2>ثبت نام</h2>
+  <div class='container d-grid'>
+    <form action='' method="POST">
+      {% csrf_token %}
+      {{form|crispy}}
+
+      <button class='btn btn-success w-100 mb-3 btn-lg' type="submit">ثبت</button>
+    </form>
+  </div>
+</div>  
 {% endblock %}
