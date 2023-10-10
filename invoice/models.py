@@ -1,6 +1,7 @@
 from django.db import models
 from django_jalali.db import models as jmodels
-
+from inventory.models import Item
+from accounts.models import CustomUser
 class Invoice(models.Model):
 
     DELETED_CHOICES = (
@@ -22,6 +23,8 @@ class Invoice(models.Model):
     updated_at = jmodels.jDateTimeField(blank=True, null=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='u')
     date = jmodels.jDateField(blank=True, null=True)
+    items = models.ManyToManyField(Item)
+    user = models.ForeignKey(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
     decription = models.TextField(blank=True, null=True)
     is_deleted = models.CharField(max_length=1, choices=DELETED_CHOICES, blank=True, null=True, default="N")
 

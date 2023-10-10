@@ -5,11 +5,22 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-  Hi {{ user.username }}!
-  <p><a href="{% url 'logout' %}">Log Out</a></p>
+<div class="d-flex align-items-center justify-content-center m-5">
+  <div class="col-md-6 col-lg-4 mx-2">
+    <div class="card text-center">
+      <div class="card-body">
+        <a class="btn btn-danger btn-lg my-5" href="#">داشبورد مدیریتی لوازم یدکی مکانیک کالا</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6 col-lg-4 mx-2">
+    <div class="card text-center">
+      <div class="card-body">
+        <a class="btn btn-primary btn-lg my-5" href="#">داشبورد مدیریتی کارگاه تراشکاری</a>
+      </div>
+    </div>
+  </div>
+</div>
 {% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">Log In</a> |
-  <a href="{% url 'signup' %}">Sign Up</a>
 {% endif %}
 {% endblock %}
