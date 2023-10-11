@@ -15,12 +15,11 @@ class CustomUserCreationForm(UserCreationForm):
             self.fields[fieldname].help_text = None
     class Meta:
         model = CustomUser
-        fields = ['email', 'username', 'type', 'password1', 'password2']
+        fields = ['email', 'username', 'password1', 'password2']
 
         labels = {
             'email':'آدرس ایمیل',
             'username':'نام کاربری',
-            'type':'نوع کاربر',
         }
 
            
@@ -29,7 +28,7 @@ class CustomUserChangeForm(UserChangeForm):
 
     class Meta:
         model = CustomUser
-        fields = ('email', 'username', 'type',)
+        fields = ('email', 'username',)
 
 
 class CustomAuthenticationForm(AuthenticationForm):
