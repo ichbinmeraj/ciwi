@@ -5,7 +5,6 @@ from django.template.defaultfilters import slugify
 from uuid import uuid4
 
 class Category(models.Model):
-    
     DELETED_CHOICES = (
         ('Y', 'Yes'),
         ('N', 'No'),
@@ -37,7 +36,6 @@ class Category(models.Model):
         super(Category, self).save(*args, **kwargs)
 
 class Item(models.Model):
-
     DELETED_CHOICES = (
         ('Y', 'Yes'),
         ('N', 'No'),
@@ -51,7 +49,7 @@ class Item(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(blank=True, null=True, max_length=150)
     slug = models.SlugField(max_length=500, unique=True, blank=True, null=True)
-    type = models.CharField(max_length=1, choices=ITEM_TYPES, blank=True, null=True, default="P")
+    type = models.CharField(max_length=1, choices=ITEM_TYPES, blank=True, null=True)
     price = models.IntegerField(blank=True, null=True)
     qty = models.IntegerField(blank=True, null=True)
     category = models.ManyToManyField(Category)
@@ -77,7 +75,6 @@ class Item(models.Model):
 
         super(Item, self).save(*args, **kwargs)
 class Customer(models.Model):
-
     DELETED_CHOICES = (
         ('Y', 'Yes'),
         ('N', 'No'),
