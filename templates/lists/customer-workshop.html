@@ -1,0 +1,24 @@
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">کد</th>
+        <th scope="col">نام و نام خانوادگی</th>
+        <th scope="col">شماره تماس</th>
+        <th scope="col">ویرایش</th>
+        <th scope="col">حذف</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for customer in context %}
+        <tr>                                                    
+            <th scope="row">-</th>
+            <td>{{customer.id}}</td>
+            <td>{{customer.name}}</td>              
+            <td>{{customer.phone}}</td>              
+            <td><a href="/details/customer/{{customer.id}}" class="btn"><i class="bi bi-pencil-square"></i></a></td>       
+            <td><a href="/deactive/customer/{{customer.id}}" class="btn"><i class="bi bi-trash3-fill"></i></a></td>       
+        </tr>
+        {% endfor %}   
+    </tbody>
+</table>

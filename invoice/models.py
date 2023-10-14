@@ -3,6 +3,7 @@ from django_jalali.db import models as jmodels
 from django.utils import timezone
 from django.template.defaultfilters import slugify
 from uuid import uuid4
+import random
 
 class Category(models.Model):
     DELETED_CHOICES = (
@@ -147,6 +148,9 @@ class Invoice(models.Model):
 
 
     def save(self, *args, **kwargs):
+        if not self.code:
+            self.code = random.randint(1000, 9999)
+
         if not self.is_deleted:
             self.is_deleted = 'N'
         
