@@ -1,9 +1,8 @@
 {% extends "base.html" %}
-
-{% block title %}داشبورد مدیریتی مکانیک کالا{% endblock %}
+{% load static %}
 
 {% block content %}
-{% if user.is_authenticated %}
+
 <div class="container my-5">
     <div class="card">
         <i class="bi bi-receipt text-center " style="font-size: 4rem;"></i>
@@ -33,13 +32,8 @@
                         <tr class="table-success">      
                     {% endif %}        
                             <th scope="row">-</th>
-                            <td>{{invoice.code}}</td>
-                            <td>{% if invoice.mechanic %}
-                                {{invoice.mechanic}}                            
-                            {% endif %}</td>       
-                            <td>{% if invoice.customer %}
-                                {{invoice.customer}}
-                            {% endif %}</td>      
+                            <td>{{invoice.code}}</td>       
+                            <td>{{invoice.customer}}</td>      
                             <td>
                                 {% if invoice.status == 'u' %}
                                     پرداخت نشده
@@ -54,60 +48,45 @@
             </tbody>
         </table>
     </div>
-  
-    <div class="container my-5 ">
-        <div class="row row-cols-1 row-cols-md-3 g-4">
-            <div class="col">
-            <div class="card">
-                <i class="p-2 bi bi-tools" style="font-size: 4rem;"></i>
+</div>
+<div class="container my-5 ">
+    <div class="row row-cols-1 row-cols-md-2 g-4"> 
+        <div class="col">
+          <div class="card">
+            <i class="p-2 bi bi-person-fill" style="font-size: 4rem;"></i>
+            <div class="card-body">
+              <h4 class="card-title"> مشتری</h4>
+                <ul class="list-group list-group-flush">
+                    {% for customer in customers %}
+                        <li class="list-group-item">{{customer.name}} - {{customer.phone}}</li>
+                    {% endfor %}
+                </ul>
                 <div class="card-body">
-                <h4 class="card-title"> مکانیک </h4>
-                    <ul class="list-group list-group-flush">
-                        {% for mechanic in mechanics %}
-                            <li class="list-group-item">{{mechanic.name}} - {{mechanic.phone}}</li>
-                        {% endfor %}
-                    </ul>
-                    <div class="card-body">
-                        <a href="lists/mechanic/" class="card-link btn btn-outline-primary">مشاهده همه</a>
-                        <a href="create/mechanic/" class="card-link btn btn-outline-success"> + اضافه کردن مکانیک</a>
-                    </div>
+                    <a href="lists/customer/" class="card-link btn btn-outline-primary">مشاهده همه</a>
+                    <a href="create/customer/" class="card-link btn btn-outline-success"> + اضافه کردن مشتری</a>
                 </div>
             </div>
-            </div>
-            <div class="col">
-            <div class="card">
-                <i class="p-2 bi bi-person-fill" style="font-size: 4rem;"></i>
+          </div>
+        </div>
+        <div class="col">
+          <div class="card">
+            <i class="p-2 bi bi-database-fill-gear" style="font-size: 4rem;"></i>
+            <div class="card-body">
+              <h4 class="card-title"> کالاها</h4>
+                <ul class="list-group list-group-flush">
+                    {% for product in products %}
+                        <li class="list-group-item">{{product.name}}</li>
+                    {% endfor %}
+                </ul>
                 <div class="card-body">
-                <h4 class="card-title"> مشتری</h4>
-                    <ul class="list-group list-group-flush">
-                        {% for customer in customers %}
-                            <li class="list-group-item">{{customer.name}} - {{customer.phone}}</li>
-                        {% endfor %}
-                    </ul>
-                    <div class="card-body">
-                        <a href="lists/customer/" class="card-link btn btn-outline-primary">مشاهده همه</a>
-                        <a href="create/customer/" class="card-link btn btn-outline-success"> + اضافه کردن مشتری</a>
-                    </div>
+                    <a href="lists/service/" class="card-link btn btn-outline-primary">مشاهده همه</a>
+                    <a href="create/service/" class="card-link btn btn-outline-success"> + اضافه کردن کالا</a>
                 </div>
             </div>
-            </div>
-            <div class="col">
-            <div class="card">
-                <i class="p-2 bi bi-database-fill-gear" style="font-size: 4rem;"></i>
-                <div class="card-body">
-                <h4 class="card-title"> خدمات</h4>
-                    <ul class="list-group list-group-flush">
-                        {% for service in services %}
-                            <li class="list-group-item">{{service.name}}</li>
-                        {% endfor %}
-                    </ul>
-                    <div class="card-body">
-                        <a href="lists/service/" class="card-link btn btn-outline-primary">مشاهده همه</a>
-                        <a href="create/service/" class="card-link btn btn-outline-success"> + اضافه کردن خدمات</a>
-                    </div>
-                </div>
-            </div>
-            </div>
+          </div>
         </div>
     </div>
 </div>
+
+{% endblock content %}
+

@@ -43,7 +43,7 @@ class Item(models.Model):
 
     ITEM_TYPES = (
         ('S', 'Service'),
-        ('p', 'Product'),
+        ('P', 'Product'),
     )
 
     id = models.AutoField(primary_key=True)
