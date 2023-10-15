@@ -1,0 +1,45 @@
+{% load humanize %}
+
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">کد</th>
+        <th scope="col">تاریخ</th>
+        <th scope="col">وضعیت پرداخت</th>
+        <th scope="col">مشتری</th>
+        <th scope="col">جمع کل مبلغ</th>
+        <th scope="col">جزیات</th>
+        <th scope="col">چاپ</th>
+        <th scope="col">حذف</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for invoice in context %}
+            {% if invoice.status == 'u' %}
+                <tr class="table-danger">
+            {% else %}
+                <tr class="table-success">      
+            {% endif %}
+                    <th scope="row">-</th>
+                    <td>{{invoice.code}}</td>
+                    <td>{{invoice.date}}</td>              
+                    <td>
+                        {% if invoice.status == 'u' %}
+                            پرداخت نشده
+                        {% else %}   
+                            پرداخت شده 
+                        {% endif %}    
+                    </td>              
+                    <td>{{invoice.customer.name}}</td>                            
+                    <td>
+                        {{invoice.totalprice|intcomma}}
+                    </td>                            
+                    <td><a href="/details/invoice/{{invoice.id}}" class="btn"><i class="bi bi-pencil-square"></i></a></td>       
+                    <td><a href="/invoice/pdf/{{invoice.id}}" class="btn"><i class="bi bi-printer-fill"></i></a></td>       
+                    <td><a href="/deactive/invoice/{{invoice.id}}" class="btn"><i class="bi bi-trash3-fill"></i></a></td>
+            </tr>   
+        {% endfor %}           
+    </tbody>
+</table>

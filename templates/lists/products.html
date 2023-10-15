@@ -1,0 +1,28 @@
+{% load humanize %}
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">کد</th>
+        <th scope="col">عنوان</th>
+        <th scope="col">قیمت</th>
+        <th scope="col">موجودی</th>
+        <th scope="col">ویرایش</th>
+        <th scope="col">حذف</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for service in context %}
+        <tr>                                                 
+            <th scope="row">-</th>
+            <td>{{service.id}}</td>              
+            <td>{{service.name}}</td>
+            <td>{{service.price|intcomma}}</td>              
+            <td>{{service.qty}}</td>              
+            <td><a href="/details/service/{{service.id}}" class="btn"><i class="bi bi-pencil-square"></i></a></td>       
+            <td><a href="/deactive/service/{{service.id}}" class="btn"><i class="bi bi-trash3-fill"></i></a></td>       
+        </tr>
+        {% endfor %}   
+    </tbody>
+</table>

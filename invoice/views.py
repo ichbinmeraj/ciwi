@@ -28,7 +28,7 @@ def mechanickala(request):
 
     return render(request, "mechanickala.html", context)
 
-from django.db.models import Q
+# from django.db.models import Q
 
 def lists(request, page):
 
