@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class='card mt-5 container'>
+  <i class="text-center bi {{icon}}" style="font-size: 4rem;"></i>
+  
+  <div class="m-5">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      <div class="row">  
+        {% include "details/"|add:page|add:".html" %}
+        <button type="submit" class="btn btn-success mt-5">ثبت</button>       
+      </div>            
+    </form>
+  </div>  
+</div> 
+
+{% endblock %}

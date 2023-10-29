@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+<div class='card mt-5 container'>
+    <i class="text-center bi {{icon}}" style="font-size: 4rem;"></i>
+    
+    <div class="m-5">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        <div class="row" id="toappend">  
+            {% load crispy_forms_tags %}
+            {{ form.code|as_crispy_field }}
+            {{ form.status|as_crispy_field }}
+            {{ form.customer|as_crispy_field }}
+            {{ form.date|as_crispy_field }}
+            {{ formset.management_form }}
+                    {% for form in formset %}
+                    <div class="table" id="toclone">
+                        <table class="table">
+                            <tr>
+                                <td style="border: 0; padding: 0 0.5em 0 0; width: 80%">
+                                    <label class="form-label" for="invoice_detail_product">Product name</label>
+                                    {{form.item}}
+                                </td>
+                                <td style="border: 0; padding: 0 0 0 0.5em;">
+                                    <label class="form-label" for="invoice_detail_amount">Amounts</label>
+                                    {{form.amount}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    {% endfor %} 
+        </div>            
+        <div class="mb-3 d-flex justify-content-center">
+            <input class="btn btn-outline-warning add-form-row" style="margin: 0 1em 0 1em; width: 40%"
+                type="button" value="Add more product" id="add_more" onclick="cloneTb();">
+            <input class="btn btn-outline-success" style="margin: 0 1em 0 1em; width: 40%" type="submit"
+                name="create-invoice">
+        </div>
+      </form>
+    </div>  
+  </div> 
+<script>
+    let TB = null, TA = null, Id=1;
+    window.addEventListener("load", () => {TB = document.getElementById("toclone"); TA = document.getElementById("toappend")});
+    const cloneTb = () => {
+        const newElement = TB.cloneNode(true);
+        let idp = newElement.querySelector("#invoice_detail_product");
+        idp.id = `invoice_detail_product${Id}`;
+        idp.name = `form-${Id}-item`;
+        let ida = newElement.querySelector("#invoice_detail_amount");
+        ida.id = `invoice_detail_amount${Id}`;
+        ida.name = `form-${Id}-amount`;
+        Id++;
+        TA.appendChild(newElement);  
+        
+    }
+</script>
+{% endblock %}
+
+  

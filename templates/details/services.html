@@ -1,0 +1,26 @@
+{% load crispy_forms_tags %}
+{{ form.name|as_crispy_field }}
+{{ form.price|as_crispy_field }}
+{{ form.type|as_crispy_field }}
+
+<script>
+    const calcCommas = val => val.replace(/[^0-9]+/g, '').replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+    const addCommas = e => {
+        e.target.value = calcCommas(e.target.value);
+    }
+    window.addEventListener("load", ()=>{
+        const id="id_price"
+        const priceInput = document.getElementById(id);
+        const form = document.querySelector("form");
+        priceInput.type = "text";
+        priceInput.value = calcCommas(priceInput.value)
+        priceInput.addEventListener("input", addCommas);
+        form.addEventListener("submit", e => {
+            e.preventDefault();
+            priceInput.removeEventListener("input", addCommas);
+            priceInput.value = priceInput.value.replace(/[^0-9]+/g, '');
+            priceInput.type = "number";
+            e.target.submit();
+        })
+    })
+</script>

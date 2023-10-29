@@ -16,7 +16,7 @@ class Category(models.Model):
     slug = models.SlugField(max_length=500, unique=True, blank=True, null=True)
     created_at = jmodels.jDateTimeField(blank=True, null=True)
     updated_at = jmodels.jDateTimeField(blank=True, null=True)    
-    is_deleted = models.CharField(max_length=1, choices=DELETED_CHOICES, blank=True, null=True, default="P")
+    is_deleted = models.CharField(max_length=1, choices=DELETED_CHOICES, blank=True, null=True, default="N")
 
     def __str__(self):
         return f"{self.name}"
@@ -53,7 +53,7 @@ class Item(models.Model):
     type = models.CharField(max_length=1, choices=ITEM_TYPES, blank=True, null=True)
     price = models.IntegerField(blank=True, null=True)
     qty = models.IntegerField(blank=True, null=True)
-    category = models.ManyToManyField(Category)
+    category = models.ManyToManyField(Category, blank=True, null=True)
     created_at = jmodels.jDateTimeField(blank=True, null=True)
     updated_at = jmodels.jDateTimeField(blank=True, null=True)    
     is_deleted = models.CharField(max_length=1, choices=DELETED_CHOICES, blank=True, null=True, default="N")
@@ -75,6 +75,7 @@ class Item(models.Model):
         self.updated_at = timezone.localtime(timezone.now())
 
         super(Item, self).save(*args, **kwargs)
+        
 class Customer(models.Model):
     DELETED_CHOICES = (
         ('Y', 'Yes'),
@@ -134,7 +135,6 @@ class Invoice(models.Model):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, default='u')
     type = models.CharField(max_length=1, choices=INVOICE_TYPE, blank=True, null=True)
     date = jmodels.jDateField(blank=True, null=True)
-    items = models.ManyToManyField(Item)
 
     #related fields
     customer = models.ForeignKey(Customer, on_delete=models.SET_NULL, blank=True, null=True)
@@ -142,7 +142,10 @@ class Invoice(models.Model):
     decription = models.TextField(blank=True, null=True)
     is_deleted = models.CharField(max_length=1, choices=DELETED_CHOICES, blank=True, null=True, default="N")
 
-
+    prices = models.IntegerField(blank=True, null=True)
+    taxprice = models.IntegerField(blank=True, null=True)
+    discountprice = models.IntegerField(blank=True, null=True)
+    
     def __str__(self):
         return f'{self.code} {self.date}'
 
@@ -164,3 +167,18 @@ class Invoice(models.Model):
         self.updated_at = timezone.localtime(timezone.now())
 
         super(Invoice, self).save(*args, **kwargs)   
+
+class InvoiceDetail(models.Model):
+    invoice = models.ForeignKey(
+        Invoice, on_delete=models.SET_NULL, blank=True, null=True)
+    item = models.ForeignKey(
+        Item, on_delete=models.SET_NULL, blank=True, null=True)
+    amount = models.IntegerField(default=1)
+
+    @property
+    def get_total_bill(self):
+        total = int(self.item.price) * int(self.amount)
+        return total
+
+    def save(self, *args, **kwargs):
+        super(InvoiceDetail, self).save(*args, **kwargs) 
