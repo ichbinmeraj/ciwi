@@ -166,7 +166,7 @@ class Invoice(models.Model):
         self.slug = slugify('{}'.format(self.slug))
         self.updated_at = timezone.localtime(timezone.now())
 
-        super(Invoice, self).save(*args, **kwargs)   
+        super(Invoice, self).save(*args, **kwargs)  
 
 class InvoiceDetail(models.Model):
     invoice = models.ForeignKey(

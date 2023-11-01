@@ -55,33 +55,32 @@ class CategoryForm(forms.ModelForm):
             'name':'عنوان',
         }
 
-class InvoiceMechanickalaForm(forms.ModelForm):
+class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ['code', 'status', 'customer', 'date']
+        fields = ['code', 'status', 'customer', 'date', 'type']
         
 
         labels = {
             'status':'وضعیت پرداخت',
             'customer':'مشتری',
         }
+    
+    type = forms.ChoiceField(
+        choices=[('W', 'فاکتور خدمات'),
+        ('M', 'فاکتور فروش')],
+        initial='W',
+        widget=forms.HiddenInput(),
+    )    
 
     date = forms.CharField(widget=forms.TextInput(attrs={'placeholder': '1401-01-01'}),label="تاریخ")
     code = forms.CharField(widget=forms.TextInput(attrs={"readonly":True}),label="کد فاکتور", required=False)
 
 
 class InvoiceMechanickalaDetailForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        if 'invoice' in kwargs and 'item' in kwargs and 'amount' in kwargs:
-            self.invoice = kwargs.pop('invoice')
-            self.item = kwargs.pop('item')
-            self.amount = kwargs.pop('amount')
-        super().__init__(*args, **kwargs)
-
     class Meta:
         model = InvoiceDetail
         fields = [
-            'invoice',
             'item',
             'amount',   
         ]
@@ -98,4 +97,35 @@ class InvoiceMechanickalaDetailForm(forms.ModelForm):
             })
         }
 
-InvoiceDetailFormSet = formset_factory(InvoiceMechanickalaDetailForm, extra=1)
+    def __init__(self, *args, **kwargs):
+        super(InvoiceMechanickalaDetailForm, self).__init__(*args, **kwargs)
+        self.fields['item'].queryset = Item.objects.filter(type='P', is_deleted='N')
+
+InvoiceMechanickalaDetailFormSet = formset_factory(InvoiceMechanickalaDetailForm, extra=1)
+
+
+class InvoiceWorkshopDetailForm(forms.ModelForm):
+    class Meta:
+        model = InvoiceDetail
+        fields = [
+            'item',
+            'amount',   
+        ]
+        widgets = {
+            'item': forms.Select(attrs={
+                'class': 'form-control',
+                'id': 'invoice_detail_product',
+            }),
+            'amount': forms.TextInput(attrs={
+                'class': 'form-control',
+                'id': 'invoice_detail_amount',
+                'placeholder': '0',
+                'type': 'number',
+            })
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(InvoiceWorkshopDetailForm, self).__init__(*args, **kwargs)
+        self.fields['item'].queryset = Item.objects.filter(type='S', is_deleted='N')
+
+InvoiceWorkshopDetailFormSet = formset_factory(InvoiceWorkshopDetailForm, extra=1)

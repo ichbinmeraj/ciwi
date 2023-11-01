@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Invoice, Customer, Item, Category
-from .forms import ServiceForm, ProductForm, CustomerForm, CategoryForm, InvoiceMechanickalaForm, InvoiceMechanickalaDetailForm, InvoiceDetailFormSet
+from .models import Invoice, Customer, Item, Category, InvoiceDetail
+from .forms import ServiceForm, ProductForm, CustomerForm, CategoryForm, InvoiceForm, InvoiceMechanickalaDetailForm, InvoiceMechanickalaDetailFormSet, InvoiceWorkshopDetailForm, InvoiceWorkshopDetailFormSet
 from django.contrib import messages
 
 
@@ -104,12 +104,16 @@ def create(request, page):
 
 
 
-def create_invoice(request):
-    form = InvoiceMechanickalaForm()
-    formset = InvoiceDetailFormSet()
+def create_invoice(request, page):
+    value = {
+        "mechanickala": ["اضافه کردن محصول دیگر"],
+        "workshop": ["اضافه کردن خدمات دیگر"],
+    }
+    form = InvoiceForm()
+    formset = InvoiceMechanickalaDetailFormSet() if page == "mechanickala" else InvoiceWorkshopDetailFormSet() if page == "workshop" else None
     if request.method == "POST":
-        form = InvoiceMechanickalaForm(request.POST)
-        formset = InvoiceDetailFormSet(request.POST)      
+        form = InvoiceForm(request.POST)
+        formset = InvoiceMechanickalaDetailFormSet(request.POST) if page == "mechanickala" else InvoiceWorkshopDetailFormSet(request.POST) if page == "workshop" else None    
         if form.is_valid():
             invoice = Invoice.objects.create(
                 code=form.cleaned_data.get("code"),
@@ -119,8 +123,6 @@ def create_invoice(request):
             )
             if formset.is_valid():
                 total = 0
-                form.save()
-                formset.save()
                 for form in formset:
                     item = form.cleaned_data.get("item")
                     amount = form.cleaned_data.get("amount")
@@ -129,16 +131,17 @@ def create_invoice(request):
                         sum = int(item.price) * int(amount)
                         # Sum of total invoice
                         total += sum
-                        # InvoiceMechanickalaDetailForm(invoice=invoice, item=item, amount=amount, request.POST).save()
+                        InvoiceDetail(invoice=invoice, item=item, amount=amount).save()
                 # Save the invoice
+                invoice.type = "M" if page == "mechanickala" else "W" if page == "workshop" else None 
                 invoice.prices = total
                 invoice.save()
                 return redirect("home")
 
     context = {
-       
         "form": form,
         "formset": formset,
+        "value": value[page][0],
     }
 
     return render(request, "invoice/create_invoice.html", context)

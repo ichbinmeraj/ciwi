@@ -8,53 +8,100 @@
     <i class="text-center bi {{icon}}" style="font-size: 4rem;"></i>
     
     <div class="m-5">
-      <form method="post" novalidate>
-        {% csrf_token %}
-        <div class="row" id="toappend">  
-            {% load crispy_forms_tags %}
-            {{ form.code|as_crispy_field }}
-            {{ form.status|as_crispy_field }}
-            {{ form.customer|as_crispy_field }}
-            {{ form.date|as_crispy_field }}
-            {{ formset.management_form }}
-                    {% for form in formset %}
-                    <div class="table" id="toclone">
-                        <table class="table">
-                            <tr>
-                                <td style="border: 0; padding: 0 0.5em 0 0; width: 80%">
-                                    <label class="form-label" for="invoice_detail_product">Product name</label>
-                                    {{form.item}}
-                                </td>
-                                <td style="border: 0; padding: 0 0 0 0.5em;">
-                                    <label class="form-label" for="invoice_detail_amount">Amounts</label>
-                                    {{form.amount}}
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    {% endfor %} 
-        </div>            
-        <div class="mb-3 d-flex justify-content-center">
-            <input class="btn btn-outline-warning add-form-row" style="margin: 0 1em 0 1em; width: 40%"
-                type="button" value="Add more product" id="add_more" onclick="cloneTb();">
-            <input class="btn btn-outline-success" style="margin: 0 1em 0 1em; width: 40%" type="submit"
-                name="create-invoice">
-        </div>
-      </form>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="row" id="toappend">  
+                {% load crispy_forms_tags %}
+                {{ form.code|as_crispy_field }}
+                {{ form.status|as_crispy_field }}
+                {{ form.customer|as_crispy_field }}
+                {{ form.date|as_crispy_field }}
+                {{ form.type|as_crispy_field }}
+                {{ formset.management_form }}
+                {% for form in formset %}
+                <div class="table" id="toclone">
+                    <table class="table">
+                        <tr>
+                            <td style="border: 0; padding: 0 0.5em 0 0; width: 72%">
+                                <label class="form-label" for="invoice_detail_product">نام محصول</label>
+                                {{form.item}}
+                            </td>
+                            <td style="border: 0; padding: 0 0 0 0.5em; padding-right: 10px !important;">
+                                <label class="form-label" for="invoice_detail_amount">تعداد</label>
+                                {{form.amount}}
+                            </td>
+                            <td style="padding-top:32px; display:none;" id="rembtn">
+                                <button name="" class="btn btn-outline-danger add-form-row" style="auto; width: 120px" onclick="removeField(event, this.getAttribute('name'));">حذف</button>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                {% endfor %}           
+            </div>          
+            <div class="mb-3 d-flex justify-content-center">
+                <input class="btn btn-outline-primary add-form-row" style="margin: 0 1em 0 1em; width: 40%"
+                    type="button" value="{{value}}" id="add_more" onclick="cloneTb();">
+                <input class="btn btn-outline-success" style="margin: 0 1em 0 1em; width: 40%" type="submit"
+                    value="ثبت کردن" name="create-invoice">
+            </div>                 
+        </form>
     </div>  
-  </div> 
+</div> 
 <script>
-    let TB = null, TA = null, Id=1;
-    window.addEventListener("load", () => {TB = document.getElementById("toclone"); TA = document.getElementById("toappend")});
+    let TB = null, TA = null, HI = null, Id= null;
+
+    const reOrder = () => {
+        let nodes = TA.querySelectorAll("div.table");
+        Id = nodes.length;
+        const [_, ...tail] = nodes;
+        let counter = 1;
+        for(i of tail){
+            console.log(i);
+            let select = i.querySelector("select");
+            select.name = `form-${counter}-item`;
+            select.id = `invoice_detail_product${counter}`;
+            let amount = i.querySelector("input");
+            amount.name = `form-${counter}-amount`;
+            amount.id = `invoice_detail_amount${counter}`;
+            i.id = `toclone-${counter}`;
+            let remBtn = i.querySelector("button");
+            remBtn.parentNode.style.display = "";
+            remBtn.parentNode.id = `rembtn${counter}`;
+            remBtn.setAttribute("name", `toclone-${counter}`);
+            ++counter;
+        }
+    }
+
+
+    window.addEventListener("load", () => {
+        TB = document.getElementById("toclone");
+        TA = document.getElementById("toappend");
+        HI = document.getElementById("id_form-TOTAL_FORMS");
+        TB.querySelector("#invoice_detail_amount").setAttribute("min", 1);
+        reOrder();
+    });
+    const removeField = (e, eId) => {
+        e.preventDefault();
+        document.getElementById(eId).remove();
+        HI.value = --Id;
+        reOrder();
+    }
+
     const cloneTb = () => {
         const newElement = TB.cloneNode(true);
+        let rb = newElement.querySelector("#rembtn");
+        rb.id = rb.id+Id;
+        rb.style.display="";
+        rb.querySelector("button").setAttribute("name",`toclone-${Id}`);
+        newElement.id = `toclone-${Id}`;
         let idp = newElement.querySelector("#invoice_detail_product");
         idp.id = `invoice_detail_product${Id}`;
         idp.name = `form-${Id}-item`;
         let ida = newElement.querySelector("#invoice_detail_amount");
         ida.id = `invoice_detail_amount${Id}`;
         ida.name = `form-${Id}-amount`;
-        Id++;
+        ida.value = 1;
+        HI.value = ++Id;
         TA.appendChild(newElement);  
         
     }
