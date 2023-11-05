@@ -32,7 +32,7 @@
                     {% endif %}        
                             <th scope="row">-</th>
                             <td>{{invoice.code}}</td>       
-                            <td>{{invoice.customer}}</td>      
+                            <td>{% if invoice.customer %}{{invoice.customer}}{% endif %}</td>      
                             <td>
                                 {% if invoice.status == 'u' %}
                                     پرداخت نشده

@@ -10,8 +10,8 @@
               <h5 class="card-title text-center" style="color: #000000;">تراشکاری شهرود سفری</h5>
               <hr>
               <ul class="list-unstyled">
-                <li class="text-black" style="color: #000000;">مشتری/مکانیک : {{invoice.customer.name}}</li>
-                <li class="text-black" style="color: #000000;">شماره تماس : {{invoice.customer.phone}}</li>
+                <li class="text-black" style="color: #000000;">مشتری/مکانیک :{% if invoice.customer %}{{invoice.customer.name}}</li>
+                <li class="text-black" style="color: #000000;">شماره تماس : {{invoice.customer.phone}}{% endif %}</li>
                 <li class="mt-1" style="color: #000000;"><span class="text-black"> تاریخ : </span>{{invoice.date|date:'Y/m/d'}}</li>
                 <li class="mt-1" style="color: #000000;"><span class="text-black">کد فاکتور : </span>{{invoice.code}}</li>
               </ul>

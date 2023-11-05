@@ -70,11 +70,9 @@ def lists(request, page):
     
     
     return render(request, "lists.html", context)
-# invoice imcomplete
+
 def create(request, page):
     obj = {
-        # "invoice-workshop": ["bi-receipt"],
-        # "invoice-mechanickala": ["bi-receipt"],
         "products": ["bi-box-seam-fill"],
         "services": ["bi-database-fill-gear"],
         "customers": ["bi-person-fill"],
@@ -94,7 +92,7 @@ def create(request, page):
 
     if form.is_valid():
         form.save()
-        messages.success(request, "The post has been updated successfully.")
+        messages.success(request, "The post has been created successfully.")
         return redirect("home")
     else:
         messages.error(request, "Please correct the following errors:")
@@ -161,65 +159,6 @@ def print_invoice(request, id):
         "invoice_detail":invoice_detail,
     }
     return render(request, "invoice/print_invoice.html", context)
-# def details(request, page, id):
-
-#     detail = get_object_or_404(
-#         Invoice
-#         if page == "invoice-workshop" or page == "invoice-mechanickala"
-#         else Customer
-#         if page == "customer-workshop" or page == "customer-mechanickala"
-#         else Item
-#         if page == "services" or page == "products"
-#         else None,
-#         id=id,
-#     )
-    
-#     obj = {
-#         "invoice-workshop": ["bi-receipt", "فاکتور های خدمات"],
-#         "invoice-mechanickala": ["bi-receipt", "فاکتور های فروش"],
-#         "products": ["bi-box-seam-fill", "لیست کالا ها"],
-#         "services": ["bi-database-fill-gear", "لیست خدمات"],
-#         "customer-workshop": ["bi-person-fill", "لیست مشتری های کارگاه تراشکاری"],
-#         "customer-mechanickala": ["bi-person-fill", "لیست مشتری های مکانیک کالا"],
-#     }
-
-#     context = {"page": page,"icon": obj[page][0], "id": id}
-
-#     if request.method == "GET":
-#         context.update(
-#             {
-#                 "form": MechanicForm(instance=detail)
-#                 if page == "mechanic"
-#                 else CustomerForm(instance=detail)
-#                 if page == "customer"
-#                 else ServiceForm(instance=detail)
-#                 if page == "service"
-#                 else InvoiceForm(instance=detail)
-#             }
-#             )
-        
-
-#         return render(request, "details.html", context)
-
-#     elif request.method == "POST":
-#         form = (
-#             MechanicForm(request.POST, instance=detail)
-#             if page == "mechanic"
-#             else CustomerForm(request.POST, instance=detail)
-#             if page == "customer"
-#             else ServiceForm(request.POST, instance=detail)
-#             if page == "service"
-#             else InvoiceForm(request.POST, instance=detail)
-#         )
-#         if form.is_valid():
-#             form.save()
-#             messages.success(request, "The post has been updated successfully.")
-#             return redirect("main")
-#         else:
-#             messages.error(request, "Please correct the following errors:")
-#             return render(
-#                 request, "details.html", {"form": form, "page": page, "id": id}
-#             )
 
 def invoice_pdf(request, id):
 
@@ -240,3 +179,65 @@ def invoice_pdf(request, id):
         "finalprice":finalprice,
     }
     return render(request, "invoice_pdf.html", context)
+
+def details(request, page, id):
+
+    detail = get_object_or_404(
+        Customer
+        if page == "customers"
+        else Item
+        if page == "services" or page == "products"
+        else Category
+        if page == "categories"
+        else None,
+        id=id,
+    )
+    
+    obj = {
+        "products": ["bi-box-seam-fill", "کالا ها"],
+        "services": ["bi-database-fill-gear", "خدمات"],
+        "categories": ["bi-bookmark-check", "دسته بندی ها"],
+        "customers": ["bi-person-fill", "مشتری ها"],
+    }
+
+    context = {"page": page,"icon": obj[page][0], "id": id}
+
+    if request.method == "GET":
+        context.update(
+            {
+                "form": CustomerForm(instance=detail)
+                if page == "customers"
+                else ProductForm(instance=detail)
+                if page == "products"
+                else ServiceForm(instance=detail)
+                if page == "services"
+                else CategoryForm(instance=detail)
+                if page == "categories"
+                else None
+            }
+            )
+        
+
+        return render(request, "details.html", context)
+
+    elif request.method == "POST":
+        form = (
+            CustomerForm(request.POST, instance=detail)
+            if page == "customers"
+            else ProductForm(request.POST, instance=detail)
+            if page == "products"
+            else ServiceForm(request.POST, instance=detail)
+            if page == "services"
+            else CategoryForm(request.POST, instance=detail)
+            if page == "categories"
+            else None
+        )
+        if form.is_valid():
+            form.save()
+            messages.success(request, "The post has been updated successfully.")
+            return redirect("main")
+        else:
+            messages.error(request, "Please correct the following errors:")
+            return render(
+                request, "details.html", {"form": form, "page": page, "id": id}
+            )
