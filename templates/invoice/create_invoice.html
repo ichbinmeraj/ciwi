@@ -23,7 +23,7 @@
                     <table class="table">
                         <tr>
                             <td style="border: 0; padding: 0 0.5em 0 0; width: 72%">
-                                <label class="form-label" for="invoice_detail_product">نام محصول</label>
+                                <label class="form-label" for="invoice_detail_product">نام {{value}}</label>
                                 {{form.item}}
                             </td>
                             <td style="border: 0; padding: 0 0 0 0.5em; padding-right: 10px !important;">
@@ -40,7 +40,7 @@
             </div>          
             <div class="mb-3 d-flex justify-content-center">
                 <input class="btn btn-outline-primary add-form-row" style="margin: 0 1em 0 1em; width: 40%"
-                    type="button" value="{{value}}" id="add_more" onclick="cloneTb();">
+                    type="button" value="اضافه کردن {{value}} دیگر" id="add_more" onclick="cloneTb();">
                 <input class="btn btn-outline-success" style="margin: 0 1em 0 1em; width: 40%" type="submit"
                     value="ثبت کردن" name="create-invoice">
             </div>                 
@@ -103,9 +103,7 @@
         ida.value = 1;
         HI.value = ++Id;
         TA.appendChild(newElement);  
-        
     }
 </script>
 {% endblock %}
-
   

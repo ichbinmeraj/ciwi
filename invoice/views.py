@@ -106,8 +106,8 @@ def create(request, page):
 
 def create_invoice(request, page):
     value = {
-        "mechanickala": ["اضافه کردن محصول دیگر"],
-        "workshop": ["اضافه کردن خدمات دیگر"],
+        "mechanickala": ["کالا"],
+        "workshop": ["خدمات"],
     }
     form = InvoiceForm()
     formset = InvoiceMechanickalaDetailFormSet() if page == "mechanickala" else InvoiceWorkshopDetailFormSet() if page == "workshop" else None
@@ -146,6 +146,21 @@ def create_invoice(request, page):
 
     return render(request, "invoice/create_invoice.html", context)
 
+def print_invoice(request, id):
+    invoice = Invoice.objects.get(id=id)
+    invoice_detail = InvoiceDetail.objects.filter(invoice=invoice)
+    prices = invoice.prices
+    taxprice = int(prices/100*9)
+    finalprice = (prices)+(taxprice)
+    
+    context = {
+        "invoice":invoice,
+        "prices":prices,
+        "taxprice":taxprice,
+        "finalprice":finalprice,
+        "invoice_detail":invoice_detail,
+    }
+    return render(request, "invoice/print_invoice.html", context)
 # def details(request, page, id):
 
 #     detail = get_object_or_404(

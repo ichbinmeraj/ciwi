@@ -1,0 +1,108 @@
+{% extends "justbootstrap.html" %} #the html page that only includes bootstrap and js cdns
+{% load static %}
+{% load humanize %}
+{% block content%}
+
+<div class="my-1" style="border: 2px solid;" >
+    <div class="card border-dark" id="printableArea">
+        <div class="">
+            <div class="card-body">
+              <h5 class="card-title text-center" style="color: #000000;">تراشکاری شهرود سفری</h5>
+              <hr>
+              <ul class="list-unstyled">
+                <li class="text-black" style="color: #000000;">مشتری/مکانیک : {{invoice.customer.name}}</li>
+                <li class="text-black" style="color: #000000;">شماره تماس : {{invoice.customer.phone}}</li>
+                <li class="mt-1" style="color: #000000;"><span class="text-black"> تاریخ : </span>{{invoice.date|date:'Y/m/d'}}</li>
+                <li class="mt-1" style="color: #000000;"><span class="text-black">کد فاکتور : </span>{{invoice.code}}</li>
+              </ul>
+            </div>
+            <div class="">
+                <table class="table mb-0 table-sm table-bordered border-dark">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th style="color: #000000;" >خدمات</th>
+                      <th class="text-center" style="color: #000000;">هزینه</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for i in  invoice_detail %}
+                    <tr>
+                      <th>.</th>
+                      <td style="color: #000000;" >{{i.item.name}}</td>
+                      <td class="text-center" style="color: #000000;">{{i.item.price|intcomma}} تومان</td>
+                    </tr>
+                    {% endfor %}
+                    <tr>
+                      <td colspan="3">
+                        <table class="table mb-0 table-borderless">
+                          <tr>
+                            <td style="color: #000000;">جمع :</td>
+                            <td style="color: #000000;"></td>
+                            <td style="color: #000000;">{{prices|intcomma}} تومان</td>
+                          <tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </tbody> 
+                </table>
+                <table class="table table-bordered border">
+                  <tbody>                  
+                    <tr>
+                      <td style="color: #000000;">+ 9% ارزش افزوده مالیات  :</td>
+                      <td style="color: #000000;">{{taxprice|intcomma}} تومان</td>
+                    </tr>
+                    {% if invoice.discountprice %}
+                    <tr>
+                      <td style="color: #000000;">تخفیف :</td>
+                      <td style="color: #000000;">{{discountprice|intcomma}} تومان</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                      <td style="color: #000000;">مبلغ قابل پرداخت :</td>
+                      <td style="color: #000000;">{{finalprice|intcomma}} تومان</td>
+                    </tr>
+                    <tr>
+                      <td style="color: #000000;">وضعیت پرداخت : </td>
+                      <td style="color: #000000;">
+                        {% if invoice.status == 'u' %}
+                        پرداخت نشده    
+                        {% else %}   
+                        پرداخت شده 
+                        {% endif %}  
+                      </td style="color: #000000;">
+                    </tr>
+                  </tbody>  
+                </table>              
+            </div>
+            
+            <div class="card-body">
+              <p class="card-subtitle" > شماره کارت بانک پاسارگاد  به نام  شهرود سفری</p>
+              <p class="card-subtitle" >5022-1913-1652-1382</p>
+              <p class="card-subtitle my-2">آدرس : میدان امام خمینی جنب بهداشت مرکزی</p>
+              <p class="card-subtitle my-2">شماره تماس : ۰۹۱۴۴۹۱۸۷۳۱ / ۰۴۱۴۲۲۶۵۳۶۱</p>
+              <p class="card-subtitle text-center my-2 text-black" style="font-size:15px; color: #000000;">با تشکر از حسن انتخاب شما</p>
+            </div>
+          </div><input id ="printbtn" type="button" value="چاپ کردن این صفحه" onclick="window.print();" >
+    </div>
+
+    
+
+</div>
+
+<style type="text/css">
+  @media print {
+      #printbtn {
+          display :  none;
+      }
+      
+  }
+  table ,th, td, {
+   
+    color: #000000;
+  }
+
+  
+  </style>
+  
+{% endblock %}
