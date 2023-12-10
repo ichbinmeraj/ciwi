@@ -13,15 +13,15 @@
       </tr>
     </thead>
     <tbody>
-        {% for service in context %}
+        {% for product in context %}
         <tr>                                                 
             <th scope="row">-</th>
-            <td>{{service.id}}</td>              
-            <td>{{service.name}}</td>
-            <td>{{service.price|intcomma}}</td>              
-            <td>{{service.qty}}</td>              
+            <td>{{product.id}}</td>              
+            <td>{{product.name}}</td>
+            <td>{{product.price|intcomma}}</td>              
+            <td>{{product.qty}}</td>              
             <td><a href="/dashboard/update/products/{{service.id}}" class="btn"><i class="bi bi-pencil-square"></i></a></td>       
-            <td><a href="/deactive/service/{{service.id}}" class="btn"><i class="bi bi-trash3-fill"></i></a></td>       
+            <td><a href="/dashboard/deactivate/products/{{product.id}}" class="btn"><i class="bi bi-trash3-fill"></i></a></td>       
         </tr>
         {% endfor %}   
     </tbody>

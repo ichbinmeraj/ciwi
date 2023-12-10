@@ -3,38 +3,40 @@
 {% load humanize %}
 {% block content%}
 
-<div class="my-1" style="border: 2px solid;" >
+<div class="my-1" style="border: 2px solid; font-size:13px; >
     <div class="card border-dark" id="printableArea">
         <div class="">
             <div class="card-body">
-              <h5 class="card-title text-center" style="color: #000000;">تراشکاری شهرود سفری</h5>
+              <h5 class="card-title text-center" style="color: #000000;">{{value}}</h5>
               <hr>
               <ul class="list-unstyled">
-                <li class="text-black" style="color: #000000;">مشتری/مکانیک :{% if invoice.customer %}{{invoice.customer.name}}</li>
-                <li class="text-black" style="color: #000000;">شماره تماس : {{invoice.customer.phone}}{% endif %}</li>
+                <li class="text-black" style="color: #000000;">مشتری/مکانیک :{% if invoice.customer %}{{invoice.customer.name}}{% endif %}</li>
+                <li class="text-black" style="color: #000000;">شماره تماس : {% if invoice.customer.phone %}{{invoice.customer.phone}}{% endif %}</li>
                 <li class="mt-1" style="color: #000000;"><span class="text-black"> تاریخ : </span>{{invoice.date|date:'Y/m/d'}}</li>
                 <li class="mt-1" style="color: #000000;"><span class="text-black">کد فاکتور : </span>{{invoice.code}}</li>
               </ul>
             </div>
             <div class="">
-                <table class="table mb-0 table-sm table-bordered border-dark">
+                <table class="table mb-0 table-sm table-bordered border-dark" style="color: #000000;">
                   <thead>
                     <tr>
-                      <th>#</th>
                       <th style="color: #000000;" >خدمات</th>
-                      <th class="text-center" style="color: #000000;">هزینه</th>
+                      <th class="text-center" style="color: #000000;" >تعداد</th>
+                      <th class="text-center" style="color: #000000;">مبلغ واحد</th>
+                      <th class="text-center" style="color: #000000;">مبلغ کل</th>
                     </tr>
                   </thead>
                   <tbody>
                     {% for i in  invoice_detail %}
                     <tr>
-                      <th>.</th>
                       <td style="color: #000000;" >{{i.item.name}}</td>
+                      <td class="text-center" style="color: #000000;">{{i.amount}}</td>
                       <td class="text-center" style="color: #000000;">{{i.item.price|intcomma}} تومان</td>
+                      <td class="text-center" style="color: #000000;">{{i.get_total_bill|intcomma}} تومان</td>
                     </tr>
                     {% endfor %}
                     <tr>
-                      <td colspan="3">
+                      <td colspan="4">
                         <table class="table mb-0 table-borderless">
                           <tr>
                             <td style="color: #000000;">جمع :</td>

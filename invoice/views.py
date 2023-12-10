@@ -1,7 +1,8 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect, get_object_or_404, reverse
 from .models import Invoice, Customer, Item, Category, InvoiceDetail
 from .forms import ServiceForm, ProductForm, CustomerForm, CategoryForm, InvoiceForm, InvoiceMechanickalaDetailForm, InvoiceMechanickalaDetailFormSet, InvoiceWorkshopDetailForm, InvoiceWorkshopDetailFormSet
 from django.contrib import messages
+from django.http import HttpResponseRedirect
 
 
 def workshop(request):
@@ -92,8 +93,8 @@ def create(request, page):
 
     if form.is_valid():
         form.save()
-        messages.success(request, "The post has been created successfully.")
-        return redirect("home")
+        messages.success(request, " با موفقیت انجام شد!")
+        return redirect(f"../../lists/{page}")
     else:
         messages.error(request, "Please correct the following errors:")
         return render(
@@ -134,6 +135,7 @@ def create_invoice(request, page):
                 invoice.type = "M" if page == "mechanickala" else "W" if page == "workshop" else None 
                 invoice.prices = total
                 invoice.save()
+                messages.success(request, " با موفقیت فاکتور ایجاد شد!")
                 return redirect("home")
 
     context = {
@@ -144,7 +146,11 @@ def create_invoice(request, page):
 
     return render(request, "invoice/create_invoice.html", context)
 
-def print_invoice(request, id):
+def print_invoice(request, page, id):
+    value = {
+        "mechanickala": ["لوازم یدکی مکانیک کالا"],
+        "workshop": ["کارگاه تراشکاری شهرود سفری"],
+    }
     invoice = Invoice.objects.get(id=id)
     invoice_detail = InvoiceDetail.objects.filter(invoice=invoice)
     prices = invoice.prices
@@ -157,28 +163,10 @@ def print_invoice(request, id):
         "taxprice":taxprice,
         "finalprice":finalprice,
         "invoice_detail":invoice_detail,
+        "value": value[page][0],
     }
     return render(request, "invoice/print_invoice.html", context)
 
-def invoice_pdf(request, id):
-
-    invoice = Invoice.objects.get(id=id)
-
-    prices = 0 
-    for service in invoice.services.values('price'):
-        prices += service['price']
-    
-    taxprice = int(prices/100*9)
-
-    finalprice = (prices)+(taxprice)
-    
-    context = {
-        "invoice":invoice,
-        "prices":prices,
-        "taxprice":taxprice,
-        "finalprice":finalprice,
-    }
-    return render(request, "invoice_pdf.html", context)
 
 def details(request, page, id):
 
@@ -241,3 +229,28 @@ def details(request, page, id):
             return render(
                 request, "details.html", {"form": form, "page": page, "id": id}
             )
+
+
+def invoice_list(request, page):
+    pass
+
+def deactive_invoice(request, id):
+    invoice = Invoice.objects.get(id=id)
+    invoice.is_deleted = "Y"
+    invoice.save()
+    messages.success(request, " با موفقیت حذف شد!")
+    return HttpResponseRedirect(reverse('home'))
+
+
+def deactive(request, page, id):
+    obj = ( Customer.objects.get(id=id)
+    if page == "customers"
+    else Item.objects.get(id=id)
+    if page == "services" or page == "products"
+    else Category.objects.get(id=id)
+    if page == "categories"
+    else None)
+    obj.is_deleted = "Y"
+    obj.save()
+    messages.success(request, " با موفقیت حذف شد!")
+    return redirect(f"../../lists/{page}")

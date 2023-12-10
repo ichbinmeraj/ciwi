@@ -54,6 +54,11 @@
       </div>
     </nav>
     <main style="margin-top:58px">
+      {% for message in messages %}
+        <div class="alert alert-info">
+          {{ message.message }}
+        </div>
+      {% endfor %}
       
       {% block content %}
       {% endblock %}
