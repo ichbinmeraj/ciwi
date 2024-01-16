@@ -2,6 +2,28 @@
 {% load static %}
 {% load humanize %}
 {% block content%}
+<div class='card mt-5 container'>
+    <i class="text-center bi {{icon}}" style="font-size: 4rem;"></i>
+    
+    <div class="m-5">
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="row" id="toappend">  
+                {% load crispy_forms_tags %}
+                {{ form.code|as_crispy_field }}
+                {{ form.status|as_crispy_field }}
+                {{ form.customer|as_crispy_field }}
+                {{ form.date|as_crispy_field }}
+                {{ form.discountprice|as_crispy_field }}
+                {{ form.type|as_crispy_field }}           
+            </div>          
+            <div class="mb-3 d-flex justify-content-center">
+                <input class="btn btn-outline-success" style="margin: 0 1em 0 1em; width: 40%" type="submit"
+                    value="ثبت کردن" name="create-invoice">
+            </div>                 
+        </form>
+    </div>  
+</div> 
 
 <div class="my-1" style="border: 2px solid; font-size:13px;" >
     <div class="card border-dark" id="printableArea">
@@ -54,10 +76,10 @@
                       <td style="color: #000000;">+ 9% ارزش افزوده مالیات  :</td>
                       <td style="color: #000000;">{{taxprice|intcomma}} تومان</td>
                     </tr>
-                    {% if invoice.discountprice > 0  %}
+                    {% if invoice.discountprice %}
                     <tr>
                       <td style="color: #000000;">تخفیف :</td>
-                      <td style="color: #000000;">{{invoice.discountprice|intcomma}} تومان</td>
+                      <td style="color: #000000;">{{discountprice|intcomma}} تومان</td>
                     </tr>
                     {% endif %}
                     <tr>
@@ -77,7 +99,7 @@
                   </tbody>  
                 </table>              
             </div>
-            
+              
             <div class="card-body">
               <p class="card-subtitle" > شماره کارت بانک پاسارگاد  به نام  شهرود سفری</p>
               <p class="card-subtitle" >5022-1913-1652-1382</p>
@@ -85,12 +107,13 @@
               <p class="card-subtitle my-2">شماره تماس : ۰۹۱۴۴۹۱۸۷۳۱ / ۰۴۱۴۲۲۶۵۳۶۱</p>
               <p class="card-subtitle text-center my-2 text-black" style="font-size:15px; color: #000000;">با تشکر از حسن انتخاب شما</p>
             </div>
-          </div><input id ="printbtn" type="button" value="چاپ کردن این صفحه" onclick="window.print();" >
+          </div>
     </div>
 
     
 
 </div>
+     
 
 <style type="text/css">
   @media print {

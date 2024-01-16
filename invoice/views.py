@@ -146,6 +146,36 @@ def create_invoice(request, page):
 
     return render(request, "invoice/create_invoice.html", context)
 
+def detail_invoice(request, page, id):
+    value = {
+        "mechanickala": ["لوازم یدکی مکانیک کالا"],
+        "workshop": ["کارگاه تراشکاری شهرود سفری"],
+    }
+    obj = get_object_or_404(Invoice, id=id)
+    form = InvoiceForm(request.POST or None, instance=obj)
+    invoice = Invoice.objects.get(id=id)
+    invoice_detail = InvoiceDetail.objects.filter(invoice=invoice)
+    prices = invoice.prices
+    taxprice = int(prices/100*9)
+    discountprice = invoice.discountprice
+    finalprice = (prices)+(taxprice)-(discountprice)
+
+    if form.is_valid():
+        form.save()
+        return redirect('home')
+    
+    context = {
+        "form": form,
+        "invoice":invoice,
+        "prices":prices,
+        "taxprice":taxprice,
+        "finalprice":finalprice,
+        "invoice_detail":invoice_detail,
+        "value": value[page][0],
+    }
+    
+    return render(request, "invoice/detail_invoice.html", context)
+
 def print_invoice(request, page, id):
     value = {
         "mechanickala": ["لوازم یدکی مکانیک کالا"],
@@ -155,18 +185,19 @@ def print_invoice(request, page, id):
     invoice_detail = InvoiceDetail.objects.filter(invoice=invoice)
     prices = invoice.prices
     taxprice = int(prices/100*9)
-    finalprice = (prices)+(taxprice)
+    discountprice = invoice.discountprice
+    finalprice = (prices)+(taxprice)-(discountprice)
     
     context = {
         "invoice":invoice,
         "prices":prices,
         "taxprice":taxprice,
+        "discountprice":discountprice,
         "finalprice":finalprice,
         "invoice_detail":invoice_detail,
         "value": value[page][0],
     }
     return render(request, "invoice/print_invoice.html", context)
-
 
 def details(request, page, id):
 

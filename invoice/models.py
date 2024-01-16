@@ -53,7 +53,7 @@ class Item(models.Model):
     type = models.CharField(max_length=1, choices=ITEM_TYPES, blank=True, null=True)
     price = models.IntegerField(blank=True, null=True)
     qty = models.IntegerField(blank=True, null=True)
-    category = models.ManyToManyField(Category, blank=True, null=True)
+    category = models.ManyToManyField(Category, blank=True)
     created_at = jmodels.jDateTimeField(blank=True, null=True)
     updated_at = jmodels.jDateTimeField(blank=True, null=True)    
     is_deleted = models.CharField(max_length=1, choices=DELETED_CHOICES, blank=True, null=True, default="N")
@@ -144,7 +144,7 @@ class Invoice(models.Model):
 
     prices = models.IntegerField(blank=True, null=True)
     taxprice = models.IntegerField(blank=True, null=True)
-    discountprice = models.IntegerField(blank=True, null=True)
+    discountprice = models.IntegerField(blank=True, null=True,  default=0)
     
     def __str__(self):
         return f'{self.code} {self.date}'

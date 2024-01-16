@@ -58,12 +58,13 @@ class CategoryForm(forms.ModelForm):
 class InvoiceForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = ['code', 'status', 'customer', 'date', 'type']
+        fields = ['code', 'status', 'customer', 'date', 'type', 'discountprice']
         
 
         labels = {
             'status':'وضعیت پرداخت',
             'customer':'مشتری',
+            'discountprice':'تخفیف',
         }
     
     type = forms.ChoiceField(
