@@ -136,7 +136,7 @@ def create_invoice(request, page):
                 invoice.prices = total
                 invoice.save()
                 messages.success(request, " با موفقیت فاکتور ایجاد شد!")
-                return redirect("home")
+                return redirect(f"{page}")
 
     context = {
         "form": form,
@@ -162,7 +162,7 @@ def detail_invoice(request, page, id):
 
     if form.is_valid():
         form.save()
-        return redirect('home')
+        return redirect(f'{page}')
     
     context = {
         "form": form,
@@ -170,6 +170,7 @@ def detail_invoice(request, page, id):
         "prices":prices,
         "taxprice":taxprice,
         "finalprice":finalprice,
+        "discountprice":discountprice,
         "invoice_detail":invoice_detail,
         "value": value[page][0],
     }
@@ -254,7 +255,7 @@ def details(request, page, id):
         if form.is_valid():
             form.save()
             messages.success(request, "The post has been updated successfully.")
-            return redirect("main")
+            return redirect("lists", page=page)
         else:
             messages.error(request, "Please correct the following errors:")
             return render(
