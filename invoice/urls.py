@@ -12,6 +12,6 @@ urlpatterns = [
     path("create_invoice/<str:page>/", views.create_invoice, name="create_invoice"),
     path("detail_invoice/<str:page>/<int:id>/", views.detail_invoice, name="detail_invoice"),
     path("print_invoice/<str:page>/<int:id>/", views.print_invoice, name="print_invoice"),
-    path('deactivate/<int:id>', views.deactive_invoice, name='deactivate_invoice'),
+    path('deactivate/<str:page>/<int:id>', views.deactive_invoice, name='deactivate_invoice'),
     path('deactivate/<str:page>/<int:id>', views.deactive, name='deactive'),
 ]

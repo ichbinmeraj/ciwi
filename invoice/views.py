@@ -266,12 +266,12 @@ def details(request, page, id):
 def invoice_list(request, page):
     pass
 
-def deactive_invoice(request, id):
+def deactive_invoice(request, page, id):
     invoice = Invoice.objects.get(id=id)
     invoice.is_deleted = "Y"
     invoice.save()
     messages.success(request, " با موفقیت حذف شد!")
-    return HttpResponseRedirect(reverse('home'))
+    return redirect("lists", page=page)
 
 
 def deactive(request, page, id):
