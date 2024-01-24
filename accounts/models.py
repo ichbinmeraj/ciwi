@@ -3,13 +3,15 @@ from django.db import models
 
 class CustomUser(AbstractUser):
 
-    # USER_TYPES = (
-    #     ('C', 'مشتری'),
-    #     ('M', 'مکانیک'),
-    #     ('F', 'شرکت')
-    # )
+    USER_TYPES = (
+        ('C', 'مشتری'),
+        ('M', 'مکانیک'),
+        ('F', 'شرکت'),
+        ('W', 'کارگاه'),
+        ('K', 'مکانیک کالا')
+    )
 
-    # type = models.CharField(max_length=1, choices=USER_TYPES, blank=True, null=True, default="C") 
+    type = models.CharField(max_length=1, choices=USER_TYPES, blank=True, null=True, default="C") 
     phone = models.IntegerField(null=True, blank=True)
     address = models.TextField(max_length=500, null=True, blank=True)
 

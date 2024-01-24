@@ -11,15 +11,16 @@ class CustomUserCreationForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super(CustomUserCreationForm, self).__init__(*args, **kwargs)
 
-        for fieldname in ['username', 'password1', 'password2']:
+        for fieldname in ['username', 'type', 'password1', 'password2']:
             self.fields[fieldname].help_text = None
     class Meta:
         model = CustomUser
-        fields = ['email', 'username', 'password1', 'password2']
+        fields = ['email', 'username', 'type', 'password1', 'password2']
 
         labels = {
             'email':'آدرس ایمیل',
             'username':'نام کاربری',
+            'type':'دسته بندی کاربر',
         }
 
            

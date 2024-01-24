@@ -3,8 +3,9 @@ from .models import Invoice, Customer, Item, Category, InvoiceDetail
 from .forms import ServiceForm, ProductForm, CustomerForm, CategoryForm, InvoiceForm, InvoiceMechanickalaDetailForm, InvoiceMechanickalaDetailFormSet, InvoiceWorkshopDetailForm, InvoiceWorkshopDetailFormSet
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def workshop(request):
     last_5_invoice = Invoice.objects.filter(is_deleted="N", type="W").order_by("-id")[:5]
     last_5_customer = Customer.objects.filter(is_deleted="N").order_by("-id")[:5]
@@ -19,6 +20,7 @@ def workshop(request):
 
     return render(request, "workshop.html", context)
 
+@login_required
 def mechanickala(request):
     last_5_invoice = Invoice.objects.filter(is_deleted="N", type="M").order_by("-id")[:5]
     last_5_customer = Customer.objects.filter(is_deleted="N").order_by("-id")[:5]
@@ -35,8 +37,9 @@ def mechanickala(request):
     return render(request, "mechanickala.html", context)
 
 # from django.db.models import Q
-
+@login_required
 def lists(request, page):
+    print(request.user.type)
 
     obj = {
         "invoice-workshop": ["bi-receipt", "فاکتور های خدمات"],
@@ -72,6 +75,7 @@ def lists(request, page):
     
     return render(request, "lists.html", context)
 
+@login_required
 def create(request, page):
     obj = {
         "products": ["bi-box-seam-fill"],
@@ -102,7 +106,7 @@ def create(request, page):
         )
 
 
-
+@login_required
 def create_invoice(request, page):
     value = {
         "mechanickala": ["کالا"],
@@ -146,6 +150,7 @@ def create_invoice(request, page):
 
     return render(request, "invoice/create_invoice.html", context)
 
+@login_required
 def detail_invoice(request, page, id):
     value = {
         "mechanickala": ["لوازم یدکی مکانیک کالا"],
@@ -177,6 +182,7 @@ def detail_invoice(request, page, id):
     
     return render(request, "invoice/detail_invoice.html", context)
 
+@login_required
 def print_invoice(request, page, id):
     value = {
         "mechanickala": ["لوازم یدکی مکانیک کالا"],
@@ -200,6 +206,7 @@ def print_invoice(request, page, id):
     }
     return render(request, "invoice/print_invoice.html", context)
 
+@login_required
 def details(request, page, id):
 
     detail = get_object_or_404(
@@ -266,6 +273,7 @@ def details(request, page, id):
 def invoice_list(request, page):
     pass
 
+@login_required
 def deactive_invoice(request, page, id):
     invoice = Invoice.objects.get(id=id)
     invoice.is_deleted = "Y"
@@ -273,7 +281,7 @@ def deactive_invoice(request, page, id):
     messages.success(request, " با موفقیت حذف شد!")
     return redirect("lists", page=page)
 
-
+@login_required
 def deactive(request, page, id):
     obj = ( Customer.objects.get(id=id)
     if page == "customers"
