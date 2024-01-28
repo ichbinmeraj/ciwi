@@ -270,8 +270,7 @@ def details(request, page, id):
             )
 
 
-def invoice_list(request, page):
-    pass
+
 
 @login_required
 def deactive_invoice(request, page, id):
