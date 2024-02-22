@@ -98,7 +98,7 @@ def create(request, page):
     if form.is_valid():
         form.save()
         messages.success(request, " با موفقیت انجام شد!")
-        return redirect(f"../../lists/{page}")
+        return redirect("main")
     else:
         messages.error(request, "Please correct the following errors:")
         return render(
