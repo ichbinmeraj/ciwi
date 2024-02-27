@@ -34,7 +34,7 @@
                     </td>              
                     <td>{{invoice.customer.name}}</td>                            
                     <td>
-                        {{invoice.totalprice|intcomma}}
+                        {{invoice.prices|intcomma}}
                     </td>                            
                     <td><a href="/dashboard/detail_invoice/mechanickala/{{invoice.id}}" class="btn"><i class="bi bi-pencil-square"></i></a></td>       
                     <td><a href="/dashboard/print_invoice/mechanickala/{{invoice.id}}/" class="btn"><i class="bi bi-printer-fill"></i></a></td>       

@@ -7,6 +7,9 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def workshop(request):
+    if request.user.type != "W":
+        messages.error(request, "شما اجازه این عملیات را ندارید!")
+        return redirect('home')
     last_5_invoice = Invoice.objects.filter(is_deleted="N", type="W").order_by("-id")[:5]
     last_5_customer = Customer.objects.filter(is_deleted="N").order_by("-id")[:5]
     last_5_service = Item.objects.filter(is_deleted="N", type="S").order_by("-id")[:5]
@@ -22,6 +25,9 @@ def workshop(request):
 
 @login_required
 def mechanickala(request):
+    if request.user.type != 'K':
+        messages.error(request, "شما اجازه این عملیات را ندارید!")
+        return redirect('home')
     last_5_invoice = Invoice.objects.filter(is_deleted="N", type="M").order_by("-id")[:5]
     last_5_customer = Customer.objects.filter(is_deleted="N").order_by("-id")[:5]
     last_5_product = Item.objects.filter(is_deleted="N", type="P").order_by("-id")[:5]
@@ -39,7 +45,6 @@ def mechanickala(request):
 # from django.db.models import Q
 @login_required
 def lists(request, page):
-    print(request.user.type)
 
     obj = {
         "invoice-workshop": ["bi-receipt", "فاکتور های خدمات"],
@@ -98,7 +103,7 @@ def create(request, page):
     if form.is_valid():
         form.save()
         messages.success(request, " با موفقیت انجام شد!")
-        return redirect("main")
+        return redirect("home")
     else:
         messages.error(request, "Please correct the following errors:")
         return render(
@@ -139,7 +144,7 @@ def create_invoice(request, page):
                 invoice.type = "M" if page == "mechanickala" else "W" if page == "workshop" else None 
                 invoice.prices = total
                 invoice.save()
-                messages.success(request, " با موفقیت فاکتور ایجاد شد!")
+                messages.success(request, "فاکتور با موفقیت ایجاد شد!")
                 return redirect(f"{page}")
 
     context = {
